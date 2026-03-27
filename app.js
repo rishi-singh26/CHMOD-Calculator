@@ -62,6 +62,7 @@ checkboxes.forEach(cb => {
   cb.addEventListener("change", () => {
     update();
     saveState();
+    errorMsg.textContent = "";
   });
 });
 
