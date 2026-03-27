@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,261 +10,351 @@
 
   <style>
     :root {
-      --bg: #ffffff;
-      --text: #111;
-      --card: #f3f3f3;
-      --accent: #2563eb;
+      --bg: #f8fafc;
+      --fg: #0f172a;
+      --card-bg: #ffffff;
+      --accent: #61c514;
+      --accent-hover: #53ac12;
+      --border: #e2e8f0;
+      --muted: #64748b;
+      --error: #ef4444;
+      --success: #22c55e;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --radius: 12px;
+      --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
     }
 
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #121212;
-        --text: #f5f5f5;
-        --card: #1e1e1e;
+        --bg: #0f172a;
+        --fg: #f8fafc;
+        --card-bg: #1e293b;
+        --border: #334155;
+        --muted: #94a3b8;
+        --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
       }
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background: var(--bg);
-      color: var(--text);
+      color: var(--fg);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      transition: 0.3s;
-      overflow: hidden;
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+      padding: 20px;
     }
 
-    h1 {
-      font-size: 4rem;
-      margin: 0;
-    }
-
-    .result-container {
+    main {
+      width: 100%;
+      max-width: 500px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
+      gap: 24px;
     }
 
-    .octal-container {
+    .result-card {
+      background: var(--card-bg);
+      padding: 32px;
+      border-radius: var(--radius);
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+
+    .octal-row {
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 8px;
     }
 
     #octal-input {
-      font-size: 4rem;
-      width: 120px;
+      font-size: 4.5rem;
+      font-weight: 800;
+      width: 180px;
       text-align: center;
-      border: 2px solid var(--accent);
-      border-radius: 8px;
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
       background: var(--bg);
-      color: var(--text);
-      display: none;
+      color: var(--fg);
+      display: inline-block;
+      font-family: inherit;
+      font-variant-numeric: tabular-nums;
+      outline: none;
+      padding: 4px;
+      margin: 0;
+      transition: all 0.2s;
     }
 
-    .edit-icon {
-      cursor: pointer;
-      fill: var(--text);
-      width: 24px;
-      height: 24px;
-      opacity: 0.6;
-      transition: 0.2s;
+    #octal-input:focus {
+      border-color: var(--accent);
+      background: var(--card-bg);
+      box-shadow: 0 0 0 3px rgba(97, 197, 20, 0.2);
     }
 
-    .edit-icon:hover {
-      opacity: 1;
+    #octal-input:hover {
+      border-color: var(--muted);
     }
 
-    .error-msg {
-      color: #ef4444;
-      font-size: 0.9rem;
-      margin-top: 5px;
-      height: 1.2rem;
-    }
-
-    .symbolic {
+    #symbolic {
+      font-family: var(--font-mono);
       font-size: 1.5rem;
-      margin-bottom: 10px;
+      color: var(--muted);
+      letter-spacing: 4px;
+      font-weight: 500;
     }
 
-    .container {
-      background: var(--card);
-      padding: 20px;
-      border-radius: 10px;
+    #error-msg {
+      color: var(--error);
+      font-size: 0.875rem;
+      margin-top: 12px;
+      min-height: 1.25rem;
+      font-weight: 500;
     }
 
-    table {
-      border-collapse: collapse;
+    .permissions-card {
+      background: var(--card-bg);
+      padding: 24px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
     }
 
-    td,
-    th {
-      padding: 10px;
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .grid-header {
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
       text-align: center;
     }
 
-    .cb-wrap {
-      display: inline-flex;
-      align-items: center;
+    .perm-label {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .cb-cell {
+      display: flex;
       justify-content: center;
-      width: 48px;
-      height: 48px;
-      /* 👈 big tap target */
-      cursor: pointer;
     }
 
-    .cb-wrap input {
-      display: none;
-    }
-
-    .cb-wrap span {
-      width: 22px;
-      height: 22px;
-      border: 2px solid var(--text);
-      border-radius: 4px;
-      display: inline-block;
+    .custom-cb {
       position: relative;
-    }
-
-    /* Checked state */
-    .cb-wrap input:checked+span {
-      background: var(--accent);
-      border-color: var(--accent);
-    }
-
-    .cb-wrap input:checked+span::after {
-      content: "";
-      position: absolute;
-      left: 6px;
-      top: 2px;
-      width: 6px;
-      height: 12px;
-      border: solid white;
-      border-width: 0 2px 2px 0;
-      transform: rotate(45deg);
-    }
-
-    button {
-      margin-top: 15px;
-      padding: 10px 25px;
-      border: none;
-      background: var(--accent);
-      color: white;
-      border-radius: 5px;
+      width: 54px;
+      height: 54px;
       cursor: pointer;
-      font-size: 16px;
-    }
-
-    .action-container {
       display: flex;
       align-items: center;
       justify-content: center;
     }
+
+    .custom-cb input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+
+    .checkmark {
+      height: 28px;
+      width: 28px;
+      background-color: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .custom-cb:hover input ~ .checkmark {
+      border-color: var(--accent);
+    }
+
+    .custom-cb input:checked ~ .checkmark {
+      background-color: var(--accent);
+      border-color: var(--accent);
+      transform: scale(1.1);
+    }
+
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+      left: 8px;
+      top: 4px;
+      width: 6px;
+      height: 12px;
+      border: solid white;
+      border-width: 0 2.5px 2.5px 0;
+      transform: rotate(45deg);
+    }
+
+    .custom-cb input:checked ~ .checkmark:after {
+      display: block;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    button.btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+      outline: none;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--muted);
+    }
+
+    .btn-outline:hover {
+      background: var(--bg);
+      color: var(--fg);
+      border-color: var(--muted);
+    }
+
+    @media (max-width: 480px) {
+      .octal-row {
+        gap: 8px;
+      }
+      .grid-header {
+        font-size: 0.65rem;
+      }
+      .perm-label {
+        font-size: 0.8rem;
+      }
+      #octal-input {
+        font-size: 3.5rem;
+        width: 140px;
+      }
+      .result-card {
+        padding: 24px 16px;
+      }
+    }
   </style>
 </head>
-
 <body>
 
   <main>
-
-    <div class="result-container">
-      <div class="octal-container">
-        <h1 id="octal">000</h1>
-        <input type="text" id="octal-input" maxlength="3" placeholder="755">
-        <svg class="edit-icon" id="edit-btn" viewBox="0 0 24 24">
-          <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
-        </svg>
+    <div class="result-card">
+      <div class="octal-row">
+        <input type="text" id="octal-input" maxlength="3" placeholder="000" autocomplete="off" aria-label="Octal value">
       </div>
-      <div class="symbolic" id="symbolic">---------</div>
-      <div class="error-msg" id="error-msg"></div>
+      <div id="symbolic">---------</div>
+      <div id="error-msg"></div>
     </div>
 
-    <div class="container">
-      <table>
-        <tr>
-          <th></th>
-          <th>Owner</th>
-          <th>Group</th>
-          <th>Public</th>
-        </tr>
+    <div class="permissions-card">
+      <div class="grid">
+        <div class="grid-spacer"></div>
+        <div class="grid-header">Owner</div>
+        <div class="grid-header">Group</div>
+        <div class="grid-header">Public</div>
 
-        <tr>
-          <td>Read (4)</td>
-          <td>
-            <label class="cb-wrap">
-              <input type="checkbox" data-col="0" data-val="4">
-              <span></span>
-            </label>
-          </td>
-          <td>
-            <label class="cb-wrap">
-              <input type="checkbox" data-col="1" data-val="4">
-              <span></span>
-            </label>
-          </td>
-          <td>
-            <label class="cb-wrap">
-              <input type="checkbox" data-col="2" data-val="4">
-              <span></span>
-            </label>
-          </td>
-        </tr>
+        <!-- Read -->
+        <div class="perm-label">Read (4)</div>
+        <div class="cb-cell">
+          <label class="custom-cb">
+            <input type="checkbox" data-col="0" data-val="4">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <div class="cb-cell">
+          <label class="custom-cb">
+            <input type="checkbox" data-col="1" data-val="4">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <div class="cb-cell">
+          <label class="custom-cb">
+            <input type="checkbox" data-col="2" data-val="4">
+            <span class="checkmark"></span>
+          </label>
+        </div>
 
-        <tr>
-          <td>Write (2)</td>
-          <td>
-            <label class="cb-wrap">
-              <input type="checkbox" data-col="0" data-val="2">
-              <span></span>
-            </label>
-          </td>
-          <td>
-            <label class="cb-wrap">
-              <input type="checkbox" data-col="1" data-val="2">
-              <span></span>
-            </label>
-          </td>
-          <td>
-            <label class="cb-wrap">
-              <input type="checkbox" data-col="2" data-val="2">
-              <span></span>
-            </label>
-          </td>
-        </tr>
+        <!-- Write -->
+        <div class="perm-label">Write (2)</div>
+        <div class="cb-cell">
+          <label class="custom-cb">
+            <input type="checkbox" data-col="0" data-val="2">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <div class="cb-cell">
+          <label class="custom-cb">
+            <input type="checkbox" data-col="1" data-val="2">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <div class="cb-cell">
+          <label class="custom-cb">
+            <input type="checkbox" data-col="2" data-val="2">
+            <span class="checkmark"></span>
+          </label>
+        </div>
 
-        <tr>
-          <td>Execute (1)</td>
-          <td>
-            <label class="cb-wrap">
-              <input type="checkbox" data-col="0" data-val="1">
-              <span></span>
-            </label>
-          </td>
-          <td>
-            <label class="cb-wrap">
-              <input type="checkbox" data-col="1" data-val="1">
-              <span></span>
-            </label>
-          </td>
-          <td>
-            <label class="cb-wrap">
-              <input type="checkbox" data-col="2" data-val="1">
-              <span></span>
-            </label>
-          </td>
-        </tr>
-      </table>
+        <!-- Execute -->
+        <div class="perm-label">Execute (1)</div>
+        <div class="cb-cell">
+          <label class="custom-cb">
+            <input type="checkbox" data-col="0" data-val="1">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <div class="cb-cell">
+          <label class="custom-cb">
+            <input type="checkbox" data-col="1" data-val="1">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <div class="cb-cell">
+          <label class="custom-cb">
+            <input type="checkbox" data-col="2" data-val="1">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </div>
     </div>
 
-
-    <div class="action-container">
-      <button class="toggle" onclick="resetState()">Reset</button>
+    <div class="actions">
+      <button class="btn btn-outline" onclick="resetState()">Reset</button>
+      <button class="btn btn-primary" id="copy-btn" onclick="copyToClipboard()">Copy Octal</button>
     </div>
   </main>
 
@@ -273,63 +362,18 @@
     const STORAGE_KEY = "chmod-state";
 
     const checkboxes = document.querySelectorAll("input[type=checkbox]");
-    const octalDisplay = document.getElementById("octal");
     const octalInput = document.getElementById("octal-input");
-    const editBtn = document.getElementById("edit-btn");
     const errorMsg = document.getElementById("error-msg");
-
-    const pencilPath = "M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z";
-    const xPath = "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z";
-
-    let isEditing = false;
-
-    function updateEditIcon() {
-      const path = editBtn.querySelector("path");
-      path.setAttribute("d", isEditing ? xPath : pencilPath);
-    }
-
-    editBtn.addEventListener("click", () => {
-      isEditing = !isEditing;
-      updateEditIcon();
-      if (isEditing) {
-        octalInput.value = octalDisplay.textContent;
-        octalDisplay.style.display = "none";
-        octalInput.style.display = "block";
-        octalInput.focus();
-      } else {
-        saveEdit();
-      }
-    });
 
     octalInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
-        saveEdit();
-      } else if (e.key === "Escape") {
-        cancelEdit();
+        octalInput.blur();
       }
     });
 
     octalInput.addEventListener("input", () => {
       validateAndSync();
     });
-
-    function saveEdit() {
-      if (validateAndSync()) {
-        isEditing = false;
-        updateEditIcon();
-        octalDisplay.style.display = "block";
-        octalInput.style.display = "none";
-      }
-    }
-
-    function cancelEdit() {
-      isEditing = false;
-      updateEditIcon();
-      octalDisplay.style.display = "block";
-      octalInput.style.display = "none";
-      errorMsg.textContent = "";
-      update();
-    }
 
     function validateAndSync() {
       const val = octalInput.value;
@@ -343,7 +387,7 @@
           cb.checked = (digits[col] & bitVal) !== 0;
         });
 
-        update();
+        update(true);
         saveState();
         return true;
       } else {
@@ -352,28 +396,29 @@
         } else {
           errorMsg.textContent = "";
         }
+        
+        checkboxes.forEach(cb => cb.checked = false);
+        update(true);
+        saveState();
         return false;
       }
     }
 
-    // Load saved state on startup
     function loadState() {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-
-      checkboxes.forEach((cb, index) => {
-        cb.checked = saved[index] || false;
-      });
-
-      update(); // refresh UI
+      if (saved.length === checkboxes.length) {
+        checkboxes.forEach((cb, index) => {
+          cb.checked = saved[index] || false;
+        });
+      }
+      update();
     }
 
-    // Save state whenever something changes
     function saveState() {
       const state = Array.from(checkboxes).map(cb => cb.checked);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
-    // Attach listeners
     checkboxes.forEach(cb => {
       cb.addEventListener("change", () => {
         update();
@@ -381,12 +426,11 @@
       });
     });
 
-    function update() {
+    function update(skipInputSync = false) {
       let cols = [0, 0, 0];
-
       checkboxes.forEach(cb => {
         if (cb.checked) {
-          let col = cb.dataset.col;
+          let col = parseInt(cb.dataset.col);
           let val = parseInt(cb.dataset.val);
           cols[col] += val;
         }
@@ -403,8 +447,7 @@
       let octal = cols.join("");
       let symbolic = cols.map(toSymbol).join("");
 
-      document.getElementById("octal").textContent = octal;
-      if (!isEditing) {
+      if (!skipInputSync) {
         octalInput.value = octal;
       }
       document.getElementById("symbolic").textContent = symbolic;
@@ -414,39 +457,57 @@
       localStorage.removeItem(STORAGE_KEY);
       checkboxes.forEach(cb => cb.checked = false);
       update();
+      errorMsg.textContent = "";
+    }
+
+    function copyToClipboard() {
+      const text = octalInput.value;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copy-btn');
+        const originalText = btn.textContent;
+        btn.textContent = 'Copied!';
+        const originalBg = btn.style.background;
+        btn.style.background = 'var(--success)';
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.style.background = originalBg;
+        }, 1500);
+      });
     }
 
     // Init
     loadState();
 
-    // PWA setup (unchanged)
+    // PWA setup (inline manifest and SW)
     const manifest = {
       name: "Chmod Calculator",
       short_name: "ChmodCalc",
       start_url: ".",
       display: "standalone",
-      background_color: "#ffffff",
+      background_color: "#f8fafc",
       theme_color: "#2563eb",
       icons: []
     };
 
     const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
     const manifestURL = URL.createObjectURL(blob);
-    document.querySelector('link[rel="manifest"]').setAttribute('href', manifestURL);
+    const link = document.querySelector('link[rel="manifest"]') || document.createElement('link');
+    link.rel = 'manifest';
+    link.href = manifestURL;
+    if (!link.parentNode) document.head.appendChild(link);
 
     if ('serviceWorker' in navigator) {
       const swCode = `
-      self.addEventListener('install', e => self.skipWaiting());
-      self.addEventListener('fetch', e => {
-        e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
-      });
-    `;
+        self.addEventListener('install', e => self.skipWaiting());
+        self.addEventListener('fetch', e => {
+          e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+        });
+      `;
       const swBlob = new Blob([swCode], { type: 'text/javascript' });
       const swURL = URL.createObjectURL(swBlob);
-      navigator.serviceWorker.register(swURL);
+      navigator.serviceWorker.register(swURL).catch(console.error);
     }
   </script>
 
 </body>
-
 </html>
