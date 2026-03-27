@@ -1,0 +1,9 @@
+{
+  "name": "Chmod Calculator",
+  "short_name": "ChmodCalc",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#2563eb",
+  "icons": []
+}

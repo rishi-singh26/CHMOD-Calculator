@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:; manifest-src 'self';">
+  <title>Chmod Calculator</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="./manifest.json" crossorigin="use-credentials">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main>
+    <div class="result-card">
+      <div class="octal-row">
+        <input type="text" id="octal-input" maxlength="3" placeholder="000" autocomplete="off" aria-label="Octal value">
+      </div>
+      <div id="symbolic">---------</div>
+      <div id="error-msg"></div>
+    </div>
+
+    <div class="permissions-card">
+      <div class="grid">
+        <div class="grid-spacer"></div>
+        <div class="grid-header">Owner</div>
+        <div class="grid-header">Group</div>
+        <div class="grid-header">Public</div>
+
+        <!-- Read -->
+        <div class="perm-label">Read (4)</div>
+        <div class="cb-cell">
+          <label class="custom-cb">
+            <input type="checkbox" data-col="0" data-val="4">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <div class="cb-cell">
+          <label class="custom-cb">
+            <input type="checkbox" data-col="1" data-val="4">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <div class="cb-cell">
+          <label class="custom-cb">
+            <input type="checkbox" data-col="2" data-val="4">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+
+        <!-- Write -->
+        <div class="perm-label">Write (2)</div>
+        <div class="cb-cell">
+          <label class="custom-cb">
+            <input type="checkbox" data-col="0" data-val="2">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <div class="cb-cell">
+          <label class="custom-cb">
+            <input type="checkbox" data-col="1" data-val="2">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <div class="cb-cell">
+          <label class="custom-cb">
+            <input type="checkbox" data-col="2" data-val="2">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+
+        <!-- Execute -->
+        <div class="perm-label">Execute (1)</div>
+        <div class="cb-cell">
+          <label class="custom-cb">
+            <input type="checkbox" data-col="0" data-val="1">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <div class="cb-cell">
+          <label class="custom-cb">
+            <input type="checkbox" data-col="1" data-val="1">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <div class="cb-cell">
+          <label class="custom-cb">
+            <input type="checkbox" data-col="2" data-val="1">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-outline" id="reset-btn">Reset</button>
+      <button class="btn btn-primary" id="copy-btn">Copy Octal</button>
+    </div>
+  </main>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
