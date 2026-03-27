@@ -59,7 +59,7 @@ function saveState() {
 }
 
 checkboxes.forEach(cb => {
-  cb.addEventListener("change", () => {
+  cb.addEventListener("click", () => {
     update();
     saveState();
     errorMsg.textContent = "";
