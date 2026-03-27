@@ -7,7 +7,7 @@
   "theme_color": "#2563eb",
   "icons": [
     {
-      "src": "assets/icon-512.png",
+      "src": "assets/Icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
@@ -21,7 +21,7 @@
       "label": "Screenshot of the Chmod Calculator interface on desktop"
     },
     {
-      "src": "assets/dashboard.png",
+      "src": "assets/ScreenshotMobile.png",
       "sizes": "1170x2532",
       "type": "image/png",
       "platform": "ios",
