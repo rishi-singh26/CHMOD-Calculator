@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chmod Calculator</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111;
+      --card: #f3f3f3;
+      --accent: #2563eb;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #121212;
+        --text: #f5f5f5;
+        --card: #1e1e1e;
+      }
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      transition: 0.3s;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 4rem;
+      margin: 0;
+    }
+
+    .result-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .octal-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #octal-input {
+      font-size: 4rem;
+      width: 120px;
+      text-align: center;
+      border: 2px solid var(--accent);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+      display: none;
+    }
+
+    .edit-icon {
+      cursor: pointer;
+      fill: var(--text);
+      width: 24px;
+      height: 24px;
+      opacity: 0.6;
+      transition: 0.2s;
+    }
+
+    .edit-icon:hover {
+      opacity: 1;
+    }
+
+    .error-msg {
+      color: #ef4444;
+      font-size: 0.9rem;
+      margin-top: 5px;
+      height: 1.2rem;
+    }
+
+    .symbolic {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .container {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    table {
+      border-collapse: collapse;
+    }
+
+    td,
+    th {
+      padding: 10px;
+      text-align: center;
+    }
+
+    .cb-wrap {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      /* 👈 big tap target */
+      cursor: pointer;
+    }
+
+    .cb-wrap input {
+      display: none;
+    }
+
+    .cb-wrap span {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--text);
+      border-radius: 4px;
+      display: inline-block;
+      position: relative;
+    }
+
+    /* Checked state */
+    .cb-wrap input:checked+span {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .cb-wrap input:checked+span::after {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 2px;
+      width: 6px;
+      height: 12px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 25px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .action-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main>
+
+    <div class="result-container">
+      <div class="octal-container">
+        <h1 id="octal">000</h1>
+        <input type="text" id="octal-input" maxlength="3" placeholder="755">
+        <svg class="edit-icon" id="edit-btn" viewBox="0 0 24 24">
+          <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+        </svg>
+      </div>
+      <div class="symbolic" id="symbolic">---------</div>
+      <div class="error-msg" id="error-msg"></div>
+    </div>
+
+    <div class="container">
+      <table>
+        <tr>
+          <th></th>
+          <th>Owner</th>
+          <th>Group</th>
+          <th>Public</th>
+        </tr>
+
+        <tr>
+          <td>Read (4)</td>
+          <td>
+            <label class="cb-wrap">
+              <input type="checkbox" data-col="0" data-val="4">
+              <span></span>
+            </label>
+          </td>
+          <td>
+            <label class="cb-wrap">
+              <input type="checkbox" data-col="1" data-val="4">
+              <span></span>
+            </label>
+          </td>
+          <td>
+            <label class="cb-wrap">
+              <input type="checkbox" data-col="2" data-val="4">
+              <span></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td>Write (2)</td>
+          <td>
+            <label class="cb-wrap">
+              <input type="checkbox" data-col="0" data-val="2">
+              <span></span>
+            </label>
+          </td>
+          <td>
+            <label class="cb-wrap">
+              <input type="checkbox" data-col="1" data-val="2">
+              <span></span>
+            </label>
+          </td>
+          <td>
+            <label class="cb-wrap">
+              <input type="checkbox" data-col="2" data-val="2">
+              <span></span>
+            </label>
+          </td>
+        </tr>
+
+        <tr>
+          <td>Execute (1)</td>
+          <td>
+            <label class="cb-wrap">
+              <input type="checkbox" data-col="0" data-val="1">
+              <span></span>
+            </label>
+          </td>
+          <td>
+            <label class="cb-wrap">
+              <input type="checkbox" data-col="1" data-val="1">
+              <span></span>
+            </label>
+          </td>
+          <td>
+            <label class="cb-wrap">
+              <input type="checkbox" data-col="2" data-val="1">
+              <span></span>
+            </label>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+
+    <div class="action-container">
+      <button class="toggle" onclick="resetState()">Reset</button>
+    </div>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "chmod-state";
+
+    const checkboxes = document.querySelectorAll("input[type=checkbox]");
+    const octalDisplay = document.getElementById("octal");
+    const octalInput = document.getElementById("octal-input");
+    const editBtn = document.getElementById("edit-btn");
+    const errorMsg = document.getElementById("error-msg");
+
+    const pencilPath = "M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z";
+    const xPath = "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z";
+
+    let isEditing = false;
+
+    function updateEditIcon() {
+      const path = editBtn.querySelector("path");
+      path.setAttribute("d", isEditing ? xPath : pencilPath);
+    }
+
+    editBtn.addEventListener("click", () => {
+      isEditing = !isEditing;
+      updateEditIcon();
+      if (isEditing) {
+        octalInput.value = octalDisplay.textContent;
+        octalDisplay.style.display = "none";
+        octalInput.style.display = "block";
+        octalInput.focus();
+      } else {
+        saveEdit();
+      }
+    });
+
+    octalInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        saveEdit();
+      } else if (e.key === "Escape") {
+        cancelEdit();
+      }
+    });
+
+    octalInput.addEventListener("input", () => {
+      validateAndSync();
+    });
+
+    function saveEdit() {
+      if (validateAndSync()) {
+        isEditing = false;
+        updateEditIcon();
+        octalDisplay.style.display = "block";
+        octalInput.style.display = "none";
+      }
+    }
+
+    function cancelEdit() {
+      isEditing = false;
+      updateEditIcon();
+      octalDisplay.style.display = "block";
+      octalInput.style.display = "none";
+      errorMsg.textContent = "";
+      update();
+    }
+
+    function validateAndSync() {
+      const val = octalInput.value;
+      if (val.length === 3 && /^[0-7]{3}$/.test(val)) {
+        errorMsg.textContent = "";
+        const digits = val.split("").map(Number);
+
+        checkboxes.forEach(cb => {
+          const col = parseInt(cb.dataset.col);
+          const bitVal = parseInt(cb.dataset.val);
+          cb.checked = (digits[col] & bitVal) !== 0;
+        });
+
+        update();
+        saveState();
+        return true;
+      } else {
+        if (val.length > 0) {
+          errorMsg.textContent = "Invalid chmod: 3 digits, each 0-7";
+        } else {
+          errorMsg.textContent = "";
+        }
+        return false;
+      }
+    }
+
+    // Load saved state on startup
+    function loadState() {
+      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+
+      checkboxes.forEach((cb, index) => {
+        cb.checked = saved[index] || false;
+      });
+
+      update(); // refresh UI
+    }
+
+    // Save state whenever something changes
+    function saveState() {
+      const state = Array.from(checkboxes).map(cb => cb.checked);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    // Attach listeners
+    checkboxes.forEach(cb => {
+      cb.addEventListener("change", () => {
+        update();
+        saveState();
+      });
+    });
+
+    function update() {
+      let cols = [0, 0, 0];
+
+      checkboxes.forEach(cb => {
+        if (cb.checked) {
+          let col = cb.dataset.col;
+          let val = parseInt(cb.dataset.val);
+          cols[col] += val;
+        }
+      });
+
+      function toSymbol(n) {
+        return [
+          (n & 4) ? "r" : "-",
+          (n & 2) ? "w" : "-",
+          (n & 1) ? "x" : "-"
+        ].join("");
+      }
+
+      let octal = cols.join("");
+      let symbolic = cols.map(toSymbol).join("");
+
+      document.getElementById("octal").textContent = octal;
+      if (!isEditing) {
+        octalInput.value = octal;
+      }
+      document.getElementById("symbolic").textContent = symbolic;
+    }
+
+    function resetState() {
+      localStorage.removeItem(STORAGE_KEY);
+      checkboxes.forEach(cb => cb.checked = false);
+      update();
+    }
+
+    // Init
+    loadState();
+
+    // PWA setup (unchanged)
+    const manifest = {
+      name: "Chmod Calculator",
+      short_name: "ChmodCalc",
+      start_url: ".",
+      display: "standalone",
+      background_color: "#ffffff",
+      theme_color: "#2563eb",
+      icons: []
+    };
+
+    const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+    const manifestURL = URL.createObjectURL(blob);
+    document.querySelector('link[rel="manifest"]').setAttribute('href', manifestURL);
+
+    if ('serviceWorker' in navigator) {
+      const swCode = `
+      self.addEventListener('install', e => self.skipWaiting());
+      self.addEventListener('fetch', e => {
+        e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+      });
+    `;
+      const swBlob = new Blob([swCode], { type: 'text/javascript' });
+      const swURL = URL.createObjectURL(swBlob);
+      navigator.serviceWorker.register(swURL);
+    }
+  </script>
+
+</body>
+
+</html>
