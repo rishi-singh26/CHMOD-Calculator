@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:; manifest-src 'self';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self'; img-src 'self' data:; manifest-src 'self';">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -11,97 +11,121 @@
 
   <!-- PWA Manifest -->
   <link rel="manifest" href="./manifest.json" crossorigin="use-credentials">
+  <link href="./assets/Favicon.ico" rel="shortcut icon" type="image/x-icon">
 
-  <link href="./assets/Favicon.ico" rel="shortcut icon" type="image/x-icon" />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <main>
-    <div class="result-card">
-      <div class="octal-row">
-        <input type="text" id="octal-input" maxlength="3" placeholder="000" autocomplete="off" aria-label="Octal value">
-      </div>
-      <div id="symbolic">---------</div>
-      <div id="error-msg"></div>
+    <div class="page-header">
+      <div class="page-header-label">Unix Permissions</div>
+      <h1><em>chmod</em> calculator</h1>
+      <p>Toggle permissions or type an octal value directly.</p>
     </div>
 
-    <div class="permissions-card">
-      <div class="grid">
-        <div class="grid-spacer"></div>
-        <div class="grid-header">Owner</div>
-        <div class="grid-header">Group</div>
-        <div class="grid-header">Public</div>
-
-        <!-- Read -->
-        <div class="perm-label">Read (4)</div>
-        <div class="cb-cell">
-          <label class="custom-cb">
-            <input type="checkbox" data-col="0" data-val="4">
-            <span class="checkmark"></span>
-          </label>
-        </div>
-        <div class="cb-cell">
-          <label class="custom-cb">
-            <input type="checkbox" data-col="1" data-val="4">
-            <span class="checkmark"></span>
-          </label>
-        </div>
-        <div class="cb-cell">
-          <label class="custom-cb">
-            <input type="checkbox" data-col="2" data-val="4">
-            <span class="checkmark"></span>
-          </label>
-        </div>
-
-        <!-- Write -->
-        <div class="perm-label">Write (2)</div>
-        <div class="cb-cell">
-          <label class="custom-cb">
-            <input type="checkbox" data-col="0" data-val="2">
-            <span class="checkmark"></span>
-          </label>
-        </div>
-        <div class="cb-cell">
-          <label class="custom-cb">
-            <input type="checkbox" data-col="1" data-val="2">
-            <span class="checkmark"></span>
-          </label>
-        </div>
-        <div class="cb-cell">
-          <label class="custom-cb">
-            <input type="checkbox" data-col="2" data-val="2">
-            <span class="checkmark"></span>
-          </label>
-        </div>
-
-        <!-- Execute -->
-        <div class="perm-label">Execute (1)</div>
-        <div class="cb-cell">
-          <label class="custom-cb">
-            <input type="checkbox" data-col="0" data-val="1">
-            <span class="checkmark"></span>
-          </label>
-        </div>
-        <div class="cb-cell">
-          <label class="custom-cb">
-            <input type="checkbox" data-col="1" data-val="1">
-            <span class="checkmark"></span>
-          </label>
-        </div>
-        <div class="cb-cell">
-          <label class="custom-cb">
-            <input type="checkbox" data-col="2" data-val="1">
-            <span class="checkmark"></span>
-          </label>
+    <div class="generator">
+      <div class="generator-header">
+        <div class="generator-icon">⊞</div>
+        <div>
+          <div class="generator-title">Permissions Calculator</div>
+          <div class="generator-sub">owner · group · public</div>
         </div>
       </div>
-    </div>
+      <div class="generator-body">
 
-    <div class="actions">
-      <button class="btn btn-outline" id="reset-btn">Reset</button>
-      <button class="btn btn-primary" id="copy-btn">Copy Octal</button>
+        <!-- Octal + symbolic display -->
+        <div class="result-display">
+          <input type="text" id="octal-input" maxlength="3" placeholder="000" autocomplete="off" aria-label="Octal value">
+          <div id="symbolic">---------</div>
+        </div>
+        <div id="error-msg"></div>
+
+        <!-- Permissions grid -->
+        <div class="gen-section-title">Permissions</div>
+
+        <div class="perm-grid">
+          <div class="perm-grid-spacer"></div>
+          <div class="perm-grid-header">Owner</div>
+          <div class="perm-grid-header">Group</div>
+          <div class="perm-grid-header">Public</div>
+
+          <!-- Read -->
+          <div class="perm-row-label">Read <span class="perm-val">(4)</span></div>
+          <div class="cb-cell">
+            <label class="cb-wrap">
+              <input type="checkbox" data-col="0" data-val="4">
+              <span class="cb-box"></span>
+            </label>
+          </div>
+          <div class="cb-cell">
+            <label class="cb-wrap">
+              <input type="checkbox" data-col="1" data-val="4">
+              <span class="cb-box"></span>
+            </label>
+          </div>
+          <div class="cb-cell">
+            <label class="cb-wrap">
+              <input type="checkbox" data-col="2" data-val="4">
+              <span class="cb-box"></span>
+            </label>
+          </div>
+
+          <!-- Write -->
+          <div class="perm-row-label">Write <span class="perm-val">(2)</span></div>
+          <div class="cb-cell">
+            <label class="cb-wrap">
+              <input type="checkbox" data-col="0" data-val="2">
+              <span class="cb-box"></span>
+            </label>
+          </div>
+          <div class="cb-cell">
+            <label class="cb-wrap">
+              <input type="checkbox" data-col="1" data-val="2">
+              <span class="cb-box"></span>
+            </label>
+          </div>
+          <div class="cb-cell">
+            <label class="cb-wrap">
+              <input type="checkbox" data-col="2" data-val="2">
+              <span class="cb-box"></span>
+            </label>
+          </div>
+
+          <!-- Execute -->
+          <div class="perm-row-label">Execute <span class="perm-val">(1)</span></div>
+          <div class="cb-cell">
+            <label class="cb-wrap">
+              <input type="checkbox" data-col="0" data-val="1">
+              <span class="cb-box"></span>
+            </label>
+          </div>
+          <div class="cb-cell">
+            <label class="cb-wrap">
+              <input type="checkbox" data-col="1" data-val="1">
+              <span class="cb-box"></span>
+            </label>
+          </div>
+          <div class="cb-cell">
+            <label class="cb-wrap">
+              <input type="checkbox" data-col="2" data-val="1">
+              <span class="cb-box"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+          <button class="gen-btn gen-btn-secondary" id="reset-btn">Reset</button>
+          <button class="gen-btn gen-btn-primary" id="copy-btn">Copy Octal</button>
+        </div>
+
+      </div>
     </div>
   </main>
 
