@@ -21,9 +21,14 @@
 
   <main>
     <div class="page-header">
-      <!-- <div class="page-header-label">Unix Permissions</div> -->
-      <h1><em>chmod</em> calculator</h1>
-      <p>Toggle permissions or type an octal value directly.</p>
+      <div class="page-header-text">
+        <!-- <div class="page-header-label">Unix Permissions</div> -->
+        <h1><em>chmod</em> calculator</h1>
+        <p>Toggle permissions or type an octal value directly.</p>
+      </div>
+      <button id="history-btn" class="gen-btn gen-btn-secondary" aria-label="Open copy history">
+        History <span id="history-count" class="history-badge">0</span>
+      </button>
     </div>
 
     <div class="generator">
@@ -125,6 +130,19 @@
       </div>
     </div>
   </main>
+
+  <div id="history-overlay"></div>
+  <aside id="history-panel" aria-label="Copy history">
+    <div class="history-header">
+      <span class="history-title">Copy History</span>
+      <button id="history-close" aria-label="Close history">✕</button>
+    </div>
+    <p class="history-limit-note">Stores last 50 entries</p>
+    <div id="history-list"></div>
+    <div class="history-footer">
+      <button id="clear-history-btn" class="gen-btn gen-btn-secondary">Clear All</button>
+    </div>
+  </aside>
 
   <script src="app.js" defer></script>
 </body>
